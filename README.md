@@ -7,3 +7,15 @@ Ideal ST data should have single-cell resolution and cover the entire tissue sur
 ## Installations
 - NVIDIA GPU (a single Nvidia GeForce RTX 3090)
 - `pip install -r requiremnt.txt`
+
+## Data
+All the datasets used in this paper can be downloaded from url：[https://drive.google.com/drive/folders/1Ew03WO5Z9_RI_IBgjA_u2xVN0pihkTA_](https://drive.google.com/drive/folders/1Ew03WO5Z9_RI_IBgjA_u2xVN0pihkTA_).
+### Data format
+- `he-raw.jpg`: The original histological image.
+- `cnts.csv`: Spot-based gene expression data, where each row represents a spot and each column represents a gene.
+- `locs-raw.csv`: All spots’ two-dimensional coordinates information, where each row represents a spot corresponding to `cnts.csv`. The first and second columns in this files represent x-coordinate and y-coordinate, respectively. The units of coordinates information are pixels corresponding to the histological image.
+- `pixel-size-raw.txt`: The actual physical size corresponding to each pixel in the histological image, measured in micrometers.
+- `radius-raw.txt`: The number of pixels in histological image corresponding to the radius of a spot.
+
+## Getting access
+In our multimodal feature mapping extractor, the ViT architecture utilizes a self-pretrained model called UNI. You need to request access to the model weights from the Huggingface model page at:[https://huggingface.co/mahmoodlab/UNI](https://huggingface.co/mahmoodlab/UNI).
