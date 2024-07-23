@@ -6,4 +6,4 @@ Ideal ST data should have single-cell resolution and cover the entire tissue sur
 
 ## Installations
 - NVIDIA GPU (a single Nvidia GeForce RTX 3090)
-- `pip install -r requiremnts.txt`
+- `pip install -r requiremnt.txt`
