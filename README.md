@@ -9,7 +9,7 @@ Ideal ST data should have single-cell resolution and cover the entire tissue sur
 - `pip install -r requiremnt.txt`
 
 ## Data
-All the datasets used in this paper can be downloaded from url：[https://drive.google.com/drive/folders/1Ew03WO5Z9_RI_IBgjA_u2xVN0pihkTA_](https://drive.google.com/drive/folders/1Ew03WO5Z9_RI_IBgjA_u2xVN0pihkTA_).
+All the datasets used in this paper can be downloaded from url：[https://zenodo.org/records/12800375](https://zenodo.org/records/12800375).
 ### Data format
 - `he-raw.jpg`: The original histological image.
 - `cnts.csv`: Spot-based gene expression data, where each row represents a spot and each column represents a gene.
