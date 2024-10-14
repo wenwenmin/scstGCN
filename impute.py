@@ -92,7 +92,7 @@ def get_model_kwargs(kwargs):
     return get_model(**kwargs)
 
 def get_model(
-        x, y, locs, radius, prefix, batch_size, epochs, lr,
+        x, y, locs, radius, ori_radius, prefix, batch_size, epochs, lr,
         load_saved=False, device='cuda'):
 
     print('x:', x.shape, ', y:', y.shape)
@@ -103,8 +103,9 @@ def get_model(
     model = train_load_model(
             model_class=scstGCN,
             model_kwargs=dict(
-                n_inp=x.shape[-1],
-                n_out=y.shape[-1],
+                num_features=x.shape[-1],
+                num_genes=y.shape[-1],
+                ori_radius=ori_radius,
                 lr=lr),
             dataset=dataset, prefix=prefix,
             batch_size=batch_size, epochs=epochs,
@@ -134,7 +135,7 @@ def normalize(embs, cnts):
 
 def predict_single_out(model, z, indices, names, y_range):
     z = torch.tensor(z, device=model.device)
-    y = model.lat_to_out(z, indices=indices)
+    y = model.get_gene(z, indices=indices)
     y = y.cpu().detach().numpy()
 
     y *= y_range[:, 1] - y_range[:, 0]
@@ -144,7 +145,7 @@ def predict_single_out(model, z, indices, names, y_range):
 
 def predict_single_lat(model, x):
     x = torch.tensor(x, device=model.device)
-    z = model.inp_to_lat(x)
+    z = model.get_hidden(x)
 
     z = z.cpu().detach().numpy()
     return z
@@ -201,7 +202,7 @@ def predict(h,w,
 
 
 def impute(
-        embs, cnts, locs, radius, epochs, batch_size, prefix,
+        embs, cnts, locs, radius, ori_radius, epochs, batch_size, prefix,
         n_states=1, load_saved=False, device='cuda', n_jobs=1):
 
     names = cnts.columns
@@ -213,7 +214,7 @@ def impute(
 
     kwargs_list = [
             dict(
-                x=embs, y=cnts, locs=locs, radius=radius,
+                x=embs, y=cnts, locs=locs, radius=radius, ori_radius=ori_radius,
                 batch_size=batch_size, epochs=epochs, lr=1e-4,
                 prefix=f'{prefix}states/{i:02d}/',
                 load_saved=load_saved, device=device)
@@ -262,15 +263,15 @@ def main(prefix, epoch=500, device='cuda', n_states=5, load_saved=False):
     embs, cnts, locs = get_data(prefix)
 
     factor = 16
-    radius = int(read_string(f'{prefix}radius.txt'))
-    radius = radius / factor
+    ori_radius = int(read_string(f'{prefix}radius.txt'))
+    radius = ori_radius / factor
 
     n_train = cnts.shape[0]
     batch_size = min(128, n_train//16)
 
     impute(
             embs=embs, cnts=cnts, locs=locs, radius=radius,
-            epochs=epoch, batch_size=batch_size,
-            n_states=n_states, prefix=prefix,
-            load_saved=load_saved,
+            ori_radius=ori_radius, epochs=epoch,
+            batch_size=batch_size, n_states=n_states,
+            prefix=prefix, load_saved=load_saved,
             device=device, n_jobs=1)
