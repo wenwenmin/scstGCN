@@ -29,38 +29,21 @@ def get_odj(h, w):
 
     return adj_matrix
 
-class ELU(nn.Module):
-
-    def __init__(self, alpha, beta):
-        super().__init__()
-        self.activation = nn.ELU(alpha=alpha, inplace=True)
-        self.beta = beta
-
-    def forward(self, x):
-        return self.activation(x) + self.beta
-
 class GraphConvLayer(nn.Module):
-    def __init__(self,input_features,output_features,func=None, bias=False):
+    def __init__(self, num_features, num_hidden):
         super(GraphConvLayer,self).__init__()
-        self.input_features = input_features
-        self.output_features = output_features
-        self.weights = nn.Parameter(torch.FloatTensor(input_features,output_features))
-        if func is None:
-            func = nn.LeakyReLU(0.1, inplace=True)
-        if bias:
-            self.bias = nn.Parameter(torch.FloatTensor(output_features))
-        else:
-            self.register_parameter('bias', None)
-        self.func = func
+        self.weights = nn.Parameter(torch.FloatTensor(num_features, num_hidden))
+        self.func = nn.LeakyReLU(0.1, inplace=True)
+        self.register_parameter('bias', None)
         self.reset_parameters()
 
     def reset_parameters(self):
         std = 1./math.sqrt(self.weights.size(1))
-        self.weights.data.uniform_(-std,std)
+        self.weights.data.uniform_(-std, std)
         if self.bias is not None:
-            self.bias.data.uniform_(-std,std)
+            self.bias.data.uniform_(-std, std)
 
-    def forward(self,x, indices=None):
+    def forward(self, x, indices=None):
         k=0
         if x.dim() == 4:
             k=1
@@ -72,7 +55,7 @@ class GraphConvLayer(nn.Module):
             adj = get_odj(h, h)
 
 
-        adj = torch.Tensor(adj).to('cuda:0')
+        adj = torch.Tensor(adj).to('cpu')
         adj = adj.unsqueeze(0).repeat(x.shape[0], 1, 1)
         if indices is None:
             output = torch.matmul(x, self.weights)
@@ -92,25 +75,25 @@ class GraphConvLayer(nn.Module):
             output = output.reshape(x.shape[0], h, w, output.shape[2])
         return output
 
-class Output_Layer(nn.Module):
-    def __init__(self, input_features, output_features, func, bias=False):
-        super(Output_Layer,self).__init__()
-        self.input_features = input_features
-        self.output_features = output_features
-        self.weights = nn.Parameter(torch.FloatTensor(input_features,output_features))
+class Linear(nn.Module):
+    def __init__(self, num_hidden, num_genes, alpha, beta, bias=False):
+        super(Linear, self).__init__()
+        self.weights = nn.Parameter(torch.FloatTensor(num_hidden,num_genes))
         if bias:
-            self.bias = nn.Parameter(torch.FloatTensor(output_features))
+            self.bias = nn.Parameter(torch.FloatTensor(num_genes))
         else:
             self.register_parameter('bias', None)
-        self.func = func
+        self.func = nn.ELU(alpha=alpha, inplace=True)
+        self.beta = beta
         self.reset_parameters()
 
     def reset_parameters(self):
         std = 1./math.sqrt(self.weights.size(1))
-        self.weights.data.uniform_(-std,std)
+        self.weights.data.uniform_(-std, std)
         if self.bias is not None:
-            self.bias.data.uniform_(-std,std)
-    def forward(self,x, indices=None):
+            self.bias.data.uniform_(-std, std)
+
+    def forward(self, x, indices=None):
 
         if indices is None:
             output = torch.matmul(x, self.weights)
@@ -121,43 +104,42 @@ class Output_Layer(nn.Module):
             output = torch.matmul(x, weight)
             if self.bias is not None:
                 output = output + self.bias[indices]
-        output = self.func(output)
+        output = self.func(output) + self.beta
         return output
 
 class scstGCN(pl.LightningModule):
-    def __init__(self, lr, n_inp, n_out, bias=False):
-        super(scstGCN,self).__init__()
+    def __init__(self, lr, num_features, num_genes, ori_radius, bias=False):
+        super(scstGCN, self).__init__()
+
         self.lr = lr
-        self.input_size=n_inp
-        self.hidden_size=512
-        self.num_class = n_out
+        self.ori_radius = ori_radius
 
-        self.net_lat = nn.Sequential(
-                        GraphConvLayer(n_inp, 512),
-                        GraphConvLayer(512, 512))
+        self.GCN_module = nn.Sequential(
+            GraphConvLayer(num_features, 512),
+            GraphConvLayer(512, 512))
 
-        self.net_out = Output_Layer(self.hidden_size, n_out, func=ELU(alpha=0.01, beta=0.01), bias=bias)
-        self.dropout = 0.5
+        self.output_module = Linear(512, num_genes, alpha=0.01, beta=0.01, bias=bias)
+
         self.save_hyperparameters()
 
-    def inp_to_lat(self, x):
-        x = self.net_lat.forward(x)
-        x = F.dropout(x, self.dropout, training=self.training)
+    def get_hidden(self, x):
+        x = self.GCN_module.forward(x)
+        x = F.dropout(x, 0.5, training=self.training)
         return x
 
-    def lat_to_out(self, x, indices=None):
-        x = self.net_out.forward(x, indices)
+    def get_gene(self, x, indices=None):
+        x = self.output_module.forward(x, indices)
         return x
 
     def forward(self, x, indices=None):
-        x = self.inp_to_lat(x)
-        x = self.lat_to_out(x, indices)
+        x = self.get_hidden(x)
+        x = self.get_gene(x, indices)
         return x
 
     def training_step(self, batch, batch_idx):
         x, y_mean = batch
-        mask = get_disk_mask(55/16)
-        mask = torch.BoolTensor(mask).to('cuda')
+        mask = get_disk_mask(self.ori_radius/16)
+        mask = torch.BoolTensor(mask).to('cpu')
         y_pred = self.forward(x)
         y_pred = y_pred.reshape(y_pred.shape[0], mask.shape[0], mask.shape[1], y_pred.shape[2])
         y_pred = torch.masked_select(y_pred, mask.unsqueeze(0).unsqueeze(-1)).view(y_pred.shape[0], -1, y_pred.shape[-1])
