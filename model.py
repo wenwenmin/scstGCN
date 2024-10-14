@@ -55,7 +55,7 @@ class GraphConvLayer(nn.Module):
             adj = get_odj(h, h)
 
 
-        adj = torch.Tensor(adj).to('cpu')
+        adj = torch.Tensor(adj).to('cuda')
         adj = adj.unsqueeze(0).repeat(x.shape[0], 1, 1)
         if indices is None:
             output = torch.matmul(x, self.weights)
@@ -139,7 +139,7 @@ class scstGCN(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y_mean = batch
         mask = get_disk_mask(self.ori_radius/16)
-        mask = torch.BoolTensor(mask).to('cpu')
+        mask = torch.BoolTensor(mask).to('cuda')
         y_pred = self.forward(x)
         y_pred = y_pred.reshape(y_pred.shape[0], mask.shape[0], mask.shape[1], y_pred.shape[2])
         y_pred = torch.masked_select(y_pred, mask.unsqueeze(0).unsqueeze(-1)).view(y_pred.shape[0], -1, y_pred.shape[-1])
