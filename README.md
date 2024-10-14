@@ -18,8 +18,8 @@ All the datasets used in this paper can be downloaded from url：[https://zenodo
 - `radius-raw.txt`: The number of pixels in histological image corresponding to the radius of a spot.
 ### Data preprocessing
 If you want to experiment with Visium HD data at single-cell resolution, you need to go through the following steps to get the spot-based Pseudo-ST data:
-- [get_pseudo_loc.py](get_pseudo_loc.py): You can obtain the position coordinates of the spot-based Pseudo-ST data through this script. The entire detected tissue will be covered by Pseudo-spots. Depending on the data characteristics, you may need to adjust the diameter variable in this script.
-- [pixel_to_spot.py](pixel_to_spot.py): You can obtain the spatial gene expression of the spot-based Pseudo-ST data through this script. The genes of all superpixels covered by the spot will be summed as its gene expression. 
+- `get_pseudo_loc.py`: You can obtain the position coordinates of the spot-based Pseudo-ST data through this script. The entire detected tissue will be covered by Pseudo-spots. Depending on the data characteristics, you may need to adjust the diameter variable in this script.
+- `pixel_to_spot.py`: You can obtain the spatial gene expression of the spot-based Pseudo-ST data through this script. The genes of all superpixels covered by the spot will be summed as its gene expression. 
 
 ## Getting access
 In our multimodal feature mapping extractor, the ViT architecture utilizes a self-pretrained model called UNI. You need to request access to the model weights from the Huggingface model page at:[https://huggingface.co/mahmoodlab/UNI](https://huggingface.co/mahmoodlab/UNI).
