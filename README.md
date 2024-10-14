@@ -24,6 +24,6 @@ In our multimodal feature mapping extractor, the ViT architecture utilizes a sel
 We provide a examples for predicting super-resolution gene expression data of 10X Visium human dorsolateral prefrontal cortex tissue, please refer to [demo.ipynb](demo.ipynb).
 
 ## Acknowledgements
-Part of the code of training framework based on pytorch lightning and obtaining mask image in this repository is adapted from the [iStar](https://github.com/daviddaiweizhang/istar). And the Vision Transformer in this repository has been pre-trained by [UNI](https://github.com/mahmoodlab/UNI). We are grateful to the authors for their excellent work.
+Part of the code, such as the training framework based on pytorch lightning and the method for mask image in this repository is adapted from the [iStar](https://github.com/daviddaiweizhang/istar). And the Vision Transformer in this repository has been pre-trained by [UNI](https://github.com/mahmoodlab/UNI). We are grateful to the authors for their excellent work.
 
 
