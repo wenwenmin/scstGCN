@@ -30,4 +30,5 @@ We provide a examples for predicting super-resolution gene expression data of 10
 ## Acknowledgements
 Part of the code, such as the training framework based on pytorch lightning and the method for mask image in this repository is adapted from the [iStar](https://github.com/daviddaiweizhang/istar). And the Vision Transformer in this repository has been pre-trained by [UNI](https://github.com/mahmoodlab/UNI). We are grateful to the authors for their excellent work.
 
-
+## Contact details
+If you have any questions, please contact xueshuailin@163.com.
