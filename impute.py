@@ -198,6 +198,8 @@ def predict(h,w,
                 z_1[i:i + gra_size, j:j + gra_size, :] = y_grp[k]
                 k = k + 1
         z_1 = z_1[0:h, 0:w, :]
+        for i, name in enumerate(name_grp):
+            save_pickle(z_1[..., i], f'{prefix}cnts-super/{name}.pickle')
     print(f'All genes have been saved in {prefix}cnts-super/..')
 
 
