@@ -12,6 +12,7 @@ def main(prefix):
     loc = pd.read_csv(prefix+'locs-raw.csv', header=0, index_col=0)
     loc = loc * scale
     loc = loc.round().astype(int)
+    loc.columns = ['x', 'y']
     loc.to_csv(prefix+'locs.csv')
 
     img = np.array(Image.open(prefix+'he-raw.jpg'))
