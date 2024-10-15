@@ -22,7 +22,7 @@ If you want to experiment with Visium HD data at single-cell resolution, you nee
 - [pixel_to_spot.py](pixel_to_spot.py): You can obtain the spatial gene expression of the spot-based Pseudo-ST data through this script. The genes of all superpixels covered by the spot will be summed as its gene expression. 
 
 ## Getting access
-In our multimodal feature mapping extractor, the ViT architecture utilizes a self-pretrained model called UNI. You need to request access to the model weights from the Huggingface model page at:[https://huggingface.co/mahmoodlab/UNI](https://huggingface.co/mahmoodlab/UNI).
+In our multimodal feature mapping extractor, the ViT architecture utilizes a self-pretrained model called UNI. You need to request access to the model weights from the Huggingface model page at:[https://huggingface.co/mahmoodlab/UNI](https://huggingface.co/mahmoodlab/UNI). It is worth noting that you need to apply for access to UNI login and replace it in the [https://huggingface.co/mahmoodlab/UNI](https://huggingface.co/mahmoodlab/UNI).
 
 ## Running demo
 We provide a examples for predicting super-resolution gene expression data of 10X Visium human dorsolateral prefrontal cortex tissue, please refer to [demo.ipynb](demo.ipynb).
