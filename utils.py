@@ -81,9 +81,10 @@ def get_HVG_genes(prefix, n_top):
     order = cnts.var().to_numpy().argsort()[::-1]
     names = cnts.columns.to_list()
     names_all = [names[i] for i in order]
+    names_top = names_all[:n_top]
     mkdir(f'{prefix}gene-names.txt')
     with open(f'{prefix}gene-names.txt', 'w') as file:
-        for s in names_all:
+        for s in names_top:
             file.write(f'{s}\n')
 
 def impute_missing(x, mask, radius=3, method='ns'):
