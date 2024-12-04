@@ -30,14 +30,15 @@ We provide a examples for predicting super-resolution gene expression data of 10
 ## Baselines
 We have listed the sources of some representative baselines below, and we would like to express our gratitude to the authors of these baselines for their generous sharing.
 
-[iStar](https://github.com/daviddaiweizhang/istar).
 
-- iStar models super-resolution gene expression from hierarchical histological features using a feedforward neural network. This method is divided into two parts: the HIPT model \cite{hipt} is used to extract hierarchical histological features, and then a feedforward neural network is used to predict super-resolution gene expression. iStar emphasizes multi-layer histological feature extraction. Each superpixel contains not only local cell feature information, but also global relationship information in the entire histology image.
 
-- XFuse integrates Spatial transcriptomics (ST) data and histology images using a deep generative model to infer super-resolution gene expression profiles. This method considers spatial gene expression and histological image data as observable effects of potential tissue states, and maps image data to potential states through a recognition neural network. XFuse performs well in the top-ranked highly expressed genes, but is misled by intense morphological similarities between different regions in histology image, resulting in poor prediction of low-expression regions of genes.
+- [iStar](https://github.com/daviddaiweizhang/istar) super-resolution gene expression from hierarchical histological features using a feedforward neural network. 
+
+- XFuse integrates Spatial transcriptomics (ST) data and histology images using a deep generative model to infer super-resolution gene expression profiles. 
   
-- TESLA generates high-resolution gene expression profiles based on Euclidean distance metric, which considers the similarity in physical locations and histology image features between superpixels and measured spots. TESLA generates super-resolution gene expression based on the assumption that the expression patterns for spatially variable genes are correlated with histology image features. Therefore, it is likely to perform poorly on non-spatially variable genes.
-- STAGE to generate gene expression data for unmeasured spots or points from Spatial Transcriptomics with a spatial location-supervised Auto-encoder GEnerator by integrating spatial information and gene expression data. STAGE was originally designed to predict gene expression at spot gaps, but we were also able to obtain super-resolution gene expression using STAGE by converting spatial coordinates from the spot level to the superpixel level.
+- TESLA generates high-resolution gene expression profiles based on Euclidean distance metric, which considers the similarity in physical locations and histology image features between superpixels and measured spots.
+- 
+- STAGE to generate gene expression data for unmeasured spots or points from Spatial Transcriptomics with a spatial location-supervised Auto-encoder GEnerator by integrating spatial information and gene expression data. 
 
     
 
