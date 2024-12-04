@@ -1,0 +1,11 @@
+[xfuse]
+network_depth = 2
+
+[optimization]
+epochs = 1
+
+[slides]
+[slides.toydata]
+data = "./files/toydata.h5"
+[slides.toydata.covariates]
+condition = "A"
