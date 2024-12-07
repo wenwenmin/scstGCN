@@ -42,7 +42,7 @@ Part of the code, such as the training framework based on pytorch lightning and 
 If you have any questions, please contact xueshuailin@163.com.
 
 
-### Citing
+## Citing
 <p>The corresponding BiBTeX citation are given below:</p>
 <div class="highlight-none"><div class="highlight"><pre>
 @article{xue2024inferring,
