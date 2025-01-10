@@ -45,12 +45,14 @@ If you have any questions, please contact xueshuailin@163.com.
 ## Citing
 <p>The corresponding BiBTeX citation are given below:</p>
 <div class="highlight-none"><div class="highlight"><pre>
-@article{xue2024inferring,
-  title={Inferring single-cell resolution spatial gene expression via fusing spot-based spatial transcriptomics, location and histology using GCN},
+@article{xue2025inferring,
+  title={Inferring single-cell resolution spatial gene expression via fusing spot-based spatial transcriptomics, location, and histology using GCN},
   author={Xue, Shuailin and Zhu, Fangfang and Chen, Jinyu and Min, Wenwen},
   journal={Briefings in Bioinformatics},
-  volume={DOI:10.1093/bib/bbae630},
-  year={2024},
+  volume={26},
+  number={1},
+  pages={bbae630},
+  year={2025},
   publisher={Oxford University Press}
 }
 </pre></div>
